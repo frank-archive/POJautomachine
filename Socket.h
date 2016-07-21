@@ -2,6 +2,7 @@
 #include<WinSock2.h>
 #include<iostream>
 #include<Windows.h>
+#include"StringMatcher.h"
 using namespace std;
 SOCKET sock;
 string resultPage;
@@ -53,8 +54,54 @@ retry:;
 	closesocket(sock);
 	return &resultPage;
 }
-string *getPageWithJSESSIONID(string JSESSIONID, string host, string directory) {
+string *getPageWithJSESSIONID(string &JSESSIONID, string &host, string &directory) {
+retry:;
+	resultPage = ""; request = "";
 
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == INVALID_SOCKET) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	sockaddr_in address = { AF_INET };
+
+	if (bind(sock, (sockaddr*)&address, sizeof(address)) == SOCKET_ERROR) {
+		closesocket(sock);
+		goto retry;
+	}
+	hostent *HostInfo = gethostbyname(host.c_str());
+	if (HostInfo == 0) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	address.sin_port = htons(80);
+	memcpy(&address.sin_addr, HostInfo->h_addr, 4);
+
+	if (connect(sock, (sockaddr*)&address, sizeof(address)) == SOCKET_ERROR) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	request = "GET " + directory + " HTTP/1.1\r\n" +
+		"Host: " + host + "\r\n" +
+		"Connection:Close\r\n" +
+		"Cookie:JSESSIONID=" + JSESSIONID + "\r\n" +
+		"\r\n";
+
+	if (send(sock, request.c_str(), request.size(), 0) == SOCKET_ERROR) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	Sleep(1000);
+	int recive;
+	while (recive = recv(sock, buffer, sizeof(buffer) - 1, 0))
+		resultPage += buffer;
+
+	closesocket(sock);
+	return &resultPage;
 }
 extern string toString(int);
 //login to poj.org
@@ -62,9 +109,11 @@ void PostDataWithJSESSIONID(string &JsessionID, string &data, string &dir, strin
 	request = (string)"POST http://poj.org/login HTTP/1.1\r\n" +
 		"Content-Type: application/x-www-form-urlencoded\r\n" +
 		"Content-Length:" + toString(data.length()) + "\r\n" +
-		"Host:poj.org\r\n" +
+		"Host:" + host + "\r\n" +
 		"Connection: Keep-Alive\r\n" +
-		"Pragma: no-cache\r\n";
+		"Pragma: no-cache\r\n" +
+		"Cookie:JSESSIONID=" + JsessionID + "\r\n" +
+		"\r\n" + data;
 retry:;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET) {
@@ -101,7 +150,15 @@ retry:;
 	return;
 }
 
+string *getJSESSIONID(string &host) {
+	getPage(host, (string)"/");
+	int cookiePos = match(resultPage, (string)"JSESSIONID=") + 11;
+	int scout = cookiePos;
+	while (resultPage[scout] != ';')scout++;
+	resultPage = resultPage.substr(cookiePos, scout-cookiePos);
 
+	return &resultPage;
+}
 
 
 

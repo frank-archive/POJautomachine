@@ -3,14 +3,13 @@
 //不可用baidu.com作为搜索引擎->百度将搜索结果加密,利用重定向功能,无法准确判断是否为CSDN论坛地址
 #define 搜索目标 "CSDN"
 #define 目标地址  "blog.csdn.net/"
-#define COOKIE "Cookie: JSESSIONID=4C8FD88A5DA72A97067A3547F88A4E3F; __utmc=79247125; __utma=79247125.1915142156.1468666850.1468845393.1469062220.6; __utmz=79247125.1468669205.2.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmb=79247125.2.10.1469062220\r\n"
-//自行登录并截取cookie信息 
 
 #include<cstring>
 #include"Socket.h"
 #include"HtmlAnalyzer.h"
 #include"CurrentTime.h"
 #include"CodeAnalysis.h"
+#include"POJsubmiter.h"
 
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
@@ -70,6 +69,7 @@ int main() {
 		for (int i = 1; !extractor->empty(); i++) {
 			resUnchecked = string(extractor->front());
 			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {
+				SubmitOnPOJ(resUnchecked, pID);
 				filename = 做题平台 + pID + '\\' + (string)"version" + toString(versions++) + (string)".cpp";
 				result = fopen(filename.c_str(), "w");
 				filenames.push(filename);
