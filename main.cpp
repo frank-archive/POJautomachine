@@ -5,11 +5,11 @@
 #define 目标地址  "blog.csdn.net/"
 
 #include<cstring>
-#include"Socket.h"
-#include"HtmlAnalyzer.h"
-#include"CurrentTime.h"
-#include"CodeAnalysis.h"
-#include"POJsubmiter.h"
+#include"core\Socket.h"
+#include"headers\HtmlAnalyzer.h"
+#include"core\CurrentTime.h"
+#include"headers\CodeAnalysis.h"
+#include"headers\POJsubmiter.h"
 
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;

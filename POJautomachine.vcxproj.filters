@@ -18,41 +18,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="core\base64.cpp">
+      <Filter>Header Files\core</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="base64.cpp">
-      <Filter>Header Files\core</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CodeAnalysis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HtmlAnalyzer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="POJsubmiter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="base64.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="KMP.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="Socket.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="StringMatcher.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="CurrentTime.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="poj.login.htm">
@@ -61,5 +35,28 @@
     <None Include="poj.submit.htm">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\base64.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\CurrentTime.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Socket.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\StringMatcher.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\CodeAnalysis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\HtmlAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\POJsubmiter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 #include<cstring>
 #include<string>
 #include<queue>
-#include"StringMatcher.h"
+#include"core\StringMatcher.h"
 using namespace std;
 queue<string> *temp1;
 string temp2;
@@ -22,7 +22,7 @@ queue<string> *getBlogURL(string &page, string pat) {
 	return temp1;
 }
 
-#include"Socket.h"
+#include"core\Socket.h"
 #define page code
 int stack = 0;
 void ReplaceSpecialCharacters(string &Page,char Code[0x7ffffff]) {

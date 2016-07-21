@@ -97,23 +97,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="base64.cpp" />
-    <ClCompile Include="main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="core\base64.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="test.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="base64.h" />
-    <ClInclude Include="CodeAnalysis.h" />
-    <ClInclude Include="CurrentTime.h" />
-    <ClInclude Include="HtmlAnalyzer.h" />
-    <ClInclude Include="KMP.h" />
-    <ClInclude Include="POJsubmiter.h" />
-    <ClInclude Include="Socket.h" />
-    <ClInclude Include="StringMatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="poj.login.htm">
@@ -122,6 +110,15 @@
     <None Include="poj.submit.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core\base64.h" />
+    <ClInclude Include="core\CurrentTime.h" />
+    <ClInclude Include="core\Socket.h" />
+    <ClInclude Include="core\StringMatcher.h" />
+    <ClInclude Include="headers\CodeAnalysis.h" />
+    <ClInclude Include="headers\HtmlAnalyzer.h" />
+    <ClInclude Include="headers\POJsubmiter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

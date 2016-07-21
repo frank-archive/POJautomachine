@@ -1,6 +1,6 @@
 #pragma once
 #include<cstring>
-#include"StringMatcher.h"
+#include"core\StringMatcher.h"
 using namespace std;
 class Counter {
 	int count;
