@@ -53,18 +53,53 @@ retry:;
 	closesocket(sock);
 	return &resultPage;
 }
-
-//login to poj.org
-void sendLoginRequest(string &username,string &password) {
-	request = (string)"POST /login HTTP/1.1\r\n"
-		+(string)"Host:poj.org\r\n"
-		+(string)"B1:login\r\n"
-		+(string)"password1:"+password+"\r\n"
-		+(string)"url:submit?problem_id=0\r\n"
-		+(string)"user_id1:"+username;
+string *getPageWithJSESSIONID(string JSESSIONID, string host, string directory) {
 
 }
+extern string toString(int);
+//login to poj.org
+void PostDataWithJSESSIONID(string &JsessionID, string &data, string &dir, string &host) {
+	request = (string)"POST http://poj.org/login HTTP/1.1\r\n" +
+		"Content-Type: application/x-www-form-urlencoded\r\n" +
+		"Content-Length:" + toString(data.length()) + "\r\n" +
+		"Host:poj.org\r\n" +
+		"Connection: Keep-Alive\r\n" +
+		"Pragma: no-cache\r\n";
+retry:;
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == INVALID_SOCKET) {
+		closesocket(sock);
+		goto retry;
+	}
 
+	sockaddr_in address = { AF_INET };
+
+	if (bind(sock, (sockaddr*)&address, sizeof(address)) == SOCKET_ERROR) {
+		closesocket(sock);
+		goto retry;
+	}
+	hostent *HostInfo = gethostbyname(host.c_str());
+	if (HostInfo == 0) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	address.sin_port = htons(80);
+	memcpy(&address.sin_addr, HostInfo->h_addr, 4);
+
+	if (connect(sock, (sockaddr*)&address, sizeof(address)) == SOCKET_ERROR) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	if (send(sock, request.c_str(), request.length(), 0) == SOCKET_ERROR) {
+		closesocket(sock);
+		goto retry;
+	}
+
+	closesocket(sock);
+	return;
+}
 
 
 

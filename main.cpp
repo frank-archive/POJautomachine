@@ -23,6 +23,7 @@ queue<string> filenames;//已存储的文件列表，供代码分析用
 CodeFetcher *extractor;//从论坛地址指向的网页中提取代码
 string filename;//存储时使用
 string resUnchecked;//初步扒下的代码，待检查
+string username, password;//POJ 登录信息
 FILE *result;//存储文件流、检查文件流
 FILE *Log;//日志文件流
 int ProblemID,EndProblemID;
@@ -47,8 +48,10 @@ int main() {
 	{
 		cout << "using " << (char)34 << host.c_str() << (char)34 << "as search engine" << endl;
 		cout << "hacking for " << 做题平台 << endl;
-		cout << "start hacking from problem ";
-		cin >> ProblemID; cout << "to problem "; cin >> EndProblemID;
+		cout << "hack between problem ";
+		cin >> ProblemID; cout << "and "; cin >> EndProblemID;
+		cout << "enter POJ login info" << endl<<"username:";
+		cin >> username; cout << "password:"; cin >> password;
 	}
 	
 	for (ProblemID; ProblemID <= EndProblemID; ProblemID++) {
