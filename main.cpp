@@ -4,6 +4,10 @@
 #define 搜索目标 "CSDN"
 #define 目标地址  "blog.csdn.net/"
 
+#define Accepted 1
+#define Waiting 2
+#define WrongAnswer 3
+
 #include<cstring>
 #include"core\Socket.h"
 #include"headers\HtmlAnalyzer.h"
@@ -18,7 +22,6 @@ string searchSuffix = "/search?q=";
 string blogName = "+";
 string *searchResult;//搜索结果页
 queue<string> *toCheck;//结果中是CSDN论坛地址的列表
-queue<string> filenames;//已存储的文件列表，供代码分析用
 CodeFetcher *extractor;//从论坛地址指向的网页中提取代码
 string filename;//存储时使用
 string resUnchecked;//初步扒下的代码，待检查
@@ -62,23 +65,33 @@ int main() {
 		searchResult=getPage(host, searchSuffix + pID + blogName);
 
 		toCheck = getBlogURL(*searchResult,目标地址);
-		extractor = new CodeFetcher(toCheck);
+		extractor = new CodeFetcher(toCheck, pID);
 		
-		system(((string)"md " + (string)做题平台 + pID).c_str());
+		//system(((string)"md " + (string)做题平台 + pID).c_str());
 		int versions = 1;
 		for (int i = 1; !extractor->empty(); i++) {
 			resUnchecked = string(extractor->front());
-			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {
+			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {//实时代码分析
 				SubmitOnPOJ(resUnchecked, pID);
-				filename = 做题平台 + pID + '\\' + (string)"version" + toString(versions++) + (string)".cpp";
-				result = fopen(filename.c_str(), "w");
-				filenames.push(filename);
-				fprintf(result, "%s", resUnchecked.c_str());
-				fclose(result);
-				
+				//filename = 做题平台 + pID + '\\' + (string)"version" + toString(versions++) + (string)".cpp";
+				//result = fopen(filename.c_str(), "w");
+				//fprintf(result, "%s", resUnchecked.c_str());
+				//fclose(result);
+			reF:;
+				switch (getStatus()) {
+				case Accepted:
+					goto AC;
+				case Waiting:
+					Sleep(1000);
+					goto reF;
+				case WrongAnswer:
+					goto WA;
+				}
 			}
+		WA:;
 			extractor->pop();
 		}
+	AC:;
 		free(extractor);
 	}
 

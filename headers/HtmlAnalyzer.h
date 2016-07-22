@@ -129,6 +129,7 @@ class CodeFetcher {
 	string host, detail;
 	string PlainURL;
 	char CodeBuffer[0x7ffffff];
+	string targetID;
 	bool split(string &URL) {
 		host = ""; detail = "";
 
@@ -139,11 +140,20 @@ class CodeFetcher {
 		host = URL.substr(0, scout);
 		return true;
 	}
-	void getCodePage() {
+	bool getCodePage() {
+	reFetch:;
 		PlainURL = "";
 		PlainURL = jobs->front();
 		split(PlainURL);
 		page = getPage(host, detail);
+		if (match(*page, targetID) == -1) {//这样可以很大程度上提高准确度
+			//原因：正常人写题解都会在标题上写题号= =
+			jobs->pop();
+			if (!jobs->empty())
+				goto reFetch;
+			else return false;
+		}
+		return true;
 	}
 	bool ExtractFromPage() {
 		int pos = match(*page, (string)"#include");
@@ -153,8 +163,8 @@ class CodeFetcher {
 		return true;
 	}
 public:
-	CodeFetcher(queue<string> *init) {
-		jobs = init;
+	CodeFetcher(queue<string> *init,string &ProblemID) {
+		jobs = init; targetID = ProblemID;
 	}
 	bool empty() { return jobs->empty(); }
 	char *front() {
@@ -163,7 +173,7 @@ public:
 	repop:;
 		if (jobs->empty())return "none";
 		code = new string;
-		getCodePage();
+		if (!getCodePage())return "none";
 		if (!ExtractFromPage()) {
 			jobs->pop();
 			goto repop;
