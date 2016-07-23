@@ -29,15 +29,25 @@ string username, password;//POJ 登录信息
 FILE *result;//存储文件流、检查文件流
 FILE *Log;//日志文件流
 int ProblemID,EndProblemID;
-string toString(int a) {
-	char temp[10];
+
+string Int2String(int a) {
+	char temp[100];
 	sprintf(temp, "%d", a);
-	string result(temp);
-	return result;
+	return (string)temp;
 }
 void printString(string &a) {
 	int len = a.length();
 	for (int i = 0; i <len; i++)putchar(a[i]);
+}
+string translateFinalstatus(int status) {
+	switch (status) {
+	case 1:
+		return (string)"Accepted";
+	case 2:
+		return (string)"Waiting";
+	case 3:
+		return (string)"Wrong Answer";
+	}
 }
 int main() {
 
@@ -58,7 +68,7 @@ int main() {
 	
 	for (ProblemID; ProblemID <= EndProblemID; ProblemID++) {
 		Log = fopen("log.txt", "a");
-		string pID = toString(ProblemID);
+		string pID = Int2String(ProblemID);
 		fprintf(Log, "[log][%s]Current ProblemID:%d\n", CurrentTime().c_str(), ProblemID);
 		fclose(Log);
 
@@ -68,7 +78,7 @@ int main() {
 		extractor = new CodeFetcher(toCheck, pID);
 		
 		//system(((string)"md " + (string)做题平台 + pID).c_str());
-		int versions = 1;
+		int versions = 1, finalstatus;
 		for (int i = 1; !extractor->empty(); i++) {
 			resUnchecked = string(extractor->front());
 			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {//实时代码分析
@@ -78,7 +88,8 @@ int main() {
 				//fprintf(result, "%s", resUnchecked.c_str());
 				//fclose(result);
 			reF:;
-				switch (getStatus()) {
+				finalstatus = getStatus();
+				switch (finalstatus) {
 				case Accepted:
 					goto AC;
 				case Waiting:
@@ -93,6 +104,7 @@ int main() {
 		}
 	AC:;
 		free(extractor);
+		//TODO:add to SQL
 	}
 
 	WSACleanup();

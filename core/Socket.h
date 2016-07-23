@@ -103,16 +103,16 @@ retry:;
 	closesocket(sock);
 	return &resultPage;
 }
-extern string toString(int);
+extern string Int2String(int);
 //login to poj.org
 void PostDataWithJSESSIONID(string &JsessionID, string &data, string &dir, string &host) {
-	request = (string)"POST http://poj.org/login HTTP/1.1\r\n" +
+	request = (string)"POST http://poj.org"+dir+" HTTP/1.1\r\n" +
 		"Content-Type: application/x-www-form-urlencoded\r\n" +
-		"Content-Length:" + toString(data.length()) + "\r\n" +
+		"Content-Length: " + Int2String(data.length()) + "\r\n" +
 		"Host:" + host + "\r\n" +
 		"Connection: Keep-Alive\r\n" +
 		"Pragma: no-cache\r\n" +
-		"Cookie:JSESSIONID=" + JsessionID + "\r\n" +
+		"Cookie: JSESSIONID=" + JsessionID + "\r\n" +
 		"\r\n" + data;
 retry:;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
