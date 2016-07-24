@@ -9,17 +9,17 @@ string UrlUTF8(const char * str){
 
 	size_t len = tt.length();
 	for (size_t i = 0; i<len; i++){
-		if (isalnum((BYTE)tt.at(i))){
+		if (isalnum((unsigned char)tt[i])){
 			char tempbuff[2] = { 0 };
-			sprintf(tempbuff, "%c", (BYTE)tt.at(i));
+			sprintf(tempbuff, "%c", (unsigned char)tt[i]);
 			dd.append(tempbuff);
 		}
-		else if (isspace((BYTE)tt.at(i))){
+		else if (isspace((unsigned char)tt[i])){
 			dd.append("+");
 		}
 		else{
 			char tempbuff[4];
-			sprintf(tempbuff, "%%%X%X", ((BYTE)tt.at(i)) >> 4, ((BYTE)tt.at(i)) % 16);
+			sprintf(tempbuff, "%%%X%X", ((unsigned char)tt[i]) >> 4, ((unsigned char)tt[i]) % 16);
 			dd.append(tempbuff);
 		}
 
