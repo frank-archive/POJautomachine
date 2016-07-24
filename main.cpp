@@ -17,6 +17,7 @@
 
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
+int resubmission;
 string host = 搜索引擎;
 string searchSuffix = "/search?q=";
 string blogName = "+";
@@ -71,19 +72,29 @@ int main() {
 		string pID = Int2String(ProblemID);
 		fprintf(Log, "[log][%s]Current ProblemID:%d\n", CurrentTime().c_str(), ProblemID);
 		fclose(Log);
-		cout << "[log][" << CurrentTime().c_str() << "]" << "Current PID:" << pID << endl;
+		cout << "[log][" << CurrentTime().c_str() << "]" << "Current PID:" << pID;
 
 		searchResult=getPage(host, searchSuffix + pID + blogName);
-
+		cout << ".";
 		toCheck = getBlogURL(*searchResult,目标地址);
 		extractor = new CodeFetcher(toCheck, pID);
-		
+		cout << ".";
 		//system(((string)"md " + (string)做题平台 + pID).c_str());
 		int versions = 1, finalstatus;
 		for (int i = 1; !extractor->empty(); i++) {
 			resUnchecked = string(extractor->front());
 			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {//实时代码分析
+				resubmission = 0;
 			resubmit:;
+				if (resubmission > 5) {
+					FILE *temp = fopen((pID + ".cpp").c_str(), "w");
+					fprintf(temp, "%s", resUnchecked.c_str());
+					fclose(temp);
+					cout << "no response" << endl;
+					extractor->pop();
+					break;
+				}
+				cout << ".";
 				SubmitOnPOJ(resUnchecked, pID);
 				//filename = 做题平台 + pID + '\\' + (string)"version" + toString(versions++) + (string)".cpp";
 				//result = fopen(filename.c_str(), "w");
@@ -93,6 +104,7 @@ int main() {
 				finalstatus = getStatus(pID);
 				switch (finalstatus) {
 				case Accepted:
+					cout << "Success" << endl;
 					goto AC;
 				case Waiting:
 					Sleep(1000);
@@ -100,11 +112,14 @@ int main() {
 				case WrongAnswer:
 					goto WA;
 				case 10://not found
+					Sleep(300);
+					resubmission++;
 					goto resubmit;
 				}
 			}
 		WA:;
 			extractor->pop();
+			if (extractor->empty())cout << "Failed" << endl;
 		}
 	AC:;
 		free(extractor);
