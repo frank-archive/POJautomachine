@@ -101,6 +101,7 @@ int main() {
 				//fprintf(result, "%s", resUnchecked.c_str());
 				//fclose(result);
 			reF:;
+				Sleep(700);
 				finalstatus = getStatus(pID);
 				switch (finalstatus) {
 				case Accepted:
