@@ -97,7 +97,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\base64.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
@@ -114,7 +113,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\base64.h" />
+    <ClInclude Include="core\Base64OnPOJ.h" />
     <ClInclude Include="core\CurrentTime.h" />
     <ClInclude Include="core\Socket.h" />
     <ClInclude Include="core\StringMatcher.h" />

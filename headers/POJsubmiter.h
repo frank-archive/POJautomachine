@@ -1,7 +1,7 @@
 #include<string>
 #include"core\Socket.h"
-#include"core\base64.h"
 #include"core\StringMatcher.h"
+#include"core\Base64OnPOJ.h"
 #define Accepted 1
 #define Waiting 2
 #define WrongAnswer 3
@@ -15,6 +15,7 @@
 #define Fortran "6"
 
 using namespace std;
+
 // private property
 //lab function
 string JSESSIONID;//clearly= =
@@ -32,18 +33,24 @@ void login() {
 //
 //
 string generateRequest(string &pID, string &code) {
-	return (string)"problem_id=" + pID + "&language=" + CPP + "&source=" + base64_encode(code.c_str(),code.length()) + "&submit=Submit&encoded=1";
+	return (string)"problem_id=" + pID + "&language=" + CPP + "&source=" + encode(code) + "&submit=Submit&encoded=1";
 }
 void SubmitOnPOJ(string &code,string &pID) {
 	login();//可以登录，待提交
 	string request = generateRequest(pID, code);
 	PostDataWithJSESSIONID(JSESSIONID, request, (string)"/submit", (string)"poj.org");
 }
-int getStatus() {
+int getStatus(string pID) {
 	Scanner = getPage((string)"poj.org", (string)"/status");
 	int resultPos = match(*Scanner, (string)"a href=userstatus?user_id=" + username);
+	if (resultPos == -1)return 10;//not found
 	*Scanner = Scanner->substr(resultPos);
+	int pidPos = match(*Scanner, (string)"a href=problem?id=")+18;
+	
 	resultPos = match(*Scanner, (string)"<font color="); resultPos += 12;
+	for (int i = 0; i < 4; i++) {
+		if ((*Scanner)[pidPos + i] != pID[i])return 10;
+	}
 	switch ((*Scanner)[resultPos]) {
 	case 'r'://red for WA
 		return WrongAnswer;

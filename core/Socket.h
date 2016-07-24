@@ -112,6 +112,7 @@ void PostDataWithJSESSIONID(string &JsessionID, string &data, string &dir, strin
 		"Host:" + host + "\r\n" +
 		"Connection: Keep-Alive\r\n" +
 		"Pragma: no-cache\r\n" +
+		"Accept: text/html, application/xhtml+xml, image/jxr, */*\r\n"+
 		"Cookie: JSESSIONID=" + JsessionID + "\r\n" +
 		"\r\n" + data;
 retry:;
@@ -176,21 +177,7 @@ string *getJSESSIONID(string &host) {
 const string ContentType_HEADER = "\r\nContent-Type: application/x-www-form-urlencoded";
 //表单默认content type 为变量所示
 //multipart/form-data 常用
-const string ContentLeng_HEADER = "\r\nContent-Length: ";
 
-void sendForm(string &CODE, string &pID) {
-
-	{
-		request = "\r\nCache-Control: max-age=0\r\n";
-		request += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8O\r\n";
-		request += "Origin: http://poj.org\r\n";
-		request += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36\r\n";
-		request += ("Referer: http://poj.org/submit?problem_id=" + pID + "\r\n");
-		request += "Accept-Encoding: gzip, deflate\r\nAccept-Language: zh-CN,zh;q=0.8";
-	}
-
-
-}
 //function encodeSource() {
 //	document.getElementById("source").value = Base64.encode(document.getElementById("source").value);
 //	return true;

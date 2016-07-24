@@ -71,6 +71,7 @@ int main() {
 		string pID = Int2String(ProblemID);
 		fprintf(Log, "[log][%s]Current ProblemID:%d\n", CurrentTime().c_str(), ProblemID);
 		fclose(Log);
+		cout << "[log][" << CurrentTime().c_str() << "]" << "Current PID:" << pID << endl;
 
 		searchResult=getPage(host, searchSuffix + pID + blogName);
 
@@ -82,13 +83,14 @@ int main() {
 		for (int i = 1; !extractor->empty(); i++) {
 			resUnchecked = string(extractor->front());
 			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {//实时代码分析
+			resubmit:;
 				SubmitOnPOJ(resUnchecked, pID);
 				//filename = 做题平台 + pID + '\\' + (string)"version" + toString(versions++) + (string)".cpp";
 				//result = fopen(filename.c_str(), "w");
 				//fprintf(result, "%s", resUnchecked.c_str());
 				//fclose(result);
 			reF:;
-				finalstatus = getStatus();
+				finalstatus = getStatus(pID);
 				switch (finalstatus) {
 				case Accepted:
 					goto AC;
@@ -97,6 +99,8 @@ int main() {
 					goto reF;
 				case WrongAnswer:
 					goto WA;
+				case 10://not found
+					goto resubmit;
 				}
 			}
 		WA:;
