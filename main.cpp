@@ -66,7 +66,7 @@ int main() {
 		cout << "enter POJ login info" << endl<<"username:";
 		cin >> username; cout << "password:"; cin >> password;
 	}
-	
+	login();
 	for (ProblemID; ProblemID <= EndProblemID; ProblemID++) {
 		Log = fopen("log.txt", "a");
 		string pID = Int2String(ProblemID);

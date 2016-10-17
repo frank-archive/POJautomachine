@@ -25,18 +25,12 @@ void login() {
 	JSESSIONID = *getJSESSIONID((string)"poj.org");
 	PostDataWithJSESSIONID(JSESSIONID,"user_id1="+username+"&password1="+password+"&B1=login&url=%2F",(string)"/login",(string)"poj.org");
 }
-//
-//
-//
-//TODO post answer
-//
-//
-//
 string generateRequest(string &pID, string &code) {
 	return (string)"problem_id=" + pID + "&language=" + CPP + "&source=" + encode(code) + "&submit=Submit&encoded=1";
 }
 void SubmitOnPOJ(string &code,string &pID) {
-	login();//可以登录，待提交
+	//login();
+	//logged in in main function
 	string request = generateRequest(pID, code);
 	PostDataWithJSESSIONID(JSESSIONID, request, (string)"/submit", (string)"poj.org");
 }
