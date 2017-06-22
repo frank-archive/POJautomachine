@@ -8,6 +8,7 @@
 #define Waiting 2
 #define WrongAnswer 3
 
+#include<cstdio>
 #include<cstring>
 #include"core\Socket.h"
 #include"headers\HtmlAnalyzer.h"
@@ -25,7 +26,7 @@ string *searchResult;//搜索结果页
 queue<string> *toCheck;//结果中是CSDN论坛地址的列表
 CodeFetcher *extractor;//从论坛地址指向的网页中提取代码
 string filename;//存储时使用
-string resUnchecked;//初步扒下的代码，待检查
+string res_code;//初步扒下的代码，待检查
 string username, password;//POJ 登录信息
 FILE *result;//存储文件流、检查文件流
 FILE *Log;//日志文件流
@@ -40,16 +41,8 @@ void printString(string &a) {
 	int len = a.length();
 	for (int i = 0; i <len; i++)putchar(a[i]);
 }
-string translateFinalstatus(int status) {
-	switch (status) {
-	case 1:
-		return (string)"Accepted";
-	case 2:
-		return (string)"Waiting";
-	case 3:
-		return (string)"Wrong Answer";
-	}
-}
+string Finalstatus[3] = { "Accepted","Waiting","Wrong Answer" };
+string getFinalstatus(int status) { return Finalstatus[status - 1]; }
 int main() {
 
 	WSADATA word;
@@ -82,25 +75,25 @@ int main() {
 		//system(((string)"md " + (string)做题平台 + pID).c_str());
 		int versions = 1, finalstatus;
 		for (int i = 1; !extractor->empty(); i++) {
-			resUnchecked = string(extractor->front());
-			if (examine(resUnchecked) && strcmp(resUnchecked.c_str(), "none")) {//实时代码分析
+			res_code = string(extractor->front());
+			if (examine(res_code) && strcmp(res_code.c_str(), "none")) {//实时代码分析
 				resubmission = 0;
 			resubmit:;
 				if (resubmission > 5) {
 					FILE *temp = fopen((pID + ".cpp").c_str(), "w");
-					fprintf(temp, "%s", resUnchecked.c_str());
+					fprintf(temp, "%s", res_code.c_str());
 					fclose(temp);
 					cout << "no response" << endl;
 					extractor->pop();
 					break;
 				}
 				cout << ".";
-				SubmitOnPOJ(resUnchecked, pID);
+				SubmitOnPOJ(res_code, pID);
 				//filename = 做题平台 + pID + '\\' + (string)"version" + toString(versions++) + (string)".cpp";
 				//result = fopen(filename.c_str(), "w");
 				//fprintf(result, "%s", resUnchecked.c_str());
 				//fclose(result);
-			reF:;
+			WAIT:;
 				Sleep(700);
 				finalstatus = getStatus(pID);
 				switch (finalstatus) {
@@ -109,7 +102,7 @@ int main() {
 					goto AC;
 				case Waiting:
 					Sleep(1000);
-					goto reF;
+					goto WAIT;
 				case WrongAnswer:
 					goto WA;
 				case 10://not found
