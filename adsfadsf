@@ -1,0 +1,47 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<cstdio>
+
+using namespace std;
+enum stats{OK,FAIL};
+string status_dict[7]={"OK","FAIL"};
+class Response{
+	int status;
+	string http_ver;
+	
+	map<string,string>key_pool;
+	
+	string content;
+	bool check(){
+		char *a=new char[20];sprintf(a,"%d",content.length());
+		set_key("Content-Length",a);
+	}
+public:
+	Response(int stat){
+		status=stat;
+		http_ver="1.1";
+	}
+	void set_key(string key,string val){
+		key_pool[key]=val;
+	}
+	void set_content(string cntnt){
+		content=cntnt;
+	}
+	string toString(){
+		check();
+		string result="HTTP"+http_ver+" "+status_dict[status]+"\r\n";
+		
+		for(map<string,string>::iterator i=key_pool.begin();
+			i!=key_pool.end();i++)
+			result+=i->first+":"+i->second+"\r\n";
+		
+		result+="\r\n"+content;
+		return result;
+	}
+};
+int main(){
+	Response a(0);
+	a.set_content("asdofi");
+	cout<<a.toString();
+}
