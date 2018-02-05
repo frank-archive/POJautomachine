@@ -3,9 +3,20 @@
 #include<map>
 #include<cstdio>
 
-using namespace std;
-enum stats{OK,FAIL};
-string status_dict[7]={"OK","FAIL"};
+using namespace std; 
+enum stats{
+	OK=200,
+	Moved_Permanently=301,
+	Moved_Temporily=302,
+	Not_Modified=303,
+	Bad_Request=400,
+	Unauthorized=401,
+	Forbidden=403,
+	Not_Found=404,
+	Internal_Server_Error=500,
+	Service_Unaviailible=503
+};
+map<int,string>code2desc;
 class Response{
 	int status;
 	string http_ver;
@@ -16,6 +27,7 @@ class Response{
 	bool check(){
 		char *a=new char[20];sprintf(a,"%d",content.length());
 		set_key("Content-Length",a);
+		
 	}
 public:
 	Response(int stat){
@@ -42,6 +54,6 @@ public:
 };
 int main(){
 	Response a(0);
-	a.set_content("asdofi");
+	
 	cout<<a.toString();
 }
